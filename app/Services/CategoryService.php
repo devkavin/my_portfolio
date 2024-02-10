@@ -52,6 +52,18 @@ class CategoryService
     }
 
     /**
+     * Fetch a category by ID.
+     *
+     * @param int $categoryId
+     * @return Category
+     * @throws ModelNotFoundException
+     */
+    public function getCategoryById(int $categoryId): Category
+    {
+        return Category::findOrFail($categoryId);
+    }
+
+    /**
      * Fetch all categories.
      *
      * @return Collection|Category[]

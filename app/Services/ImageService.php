@@ -24,7 +24,7 @@ class ImageService
         $project = Project::findOrFail($projectId);
 
         // Define the path where the image will be stored
-        $path = $image->store('public/projects');
+        $path = $image->store('public/projects/' . $project->id);
 
         // Create and return the new Image record
         return Image::create([

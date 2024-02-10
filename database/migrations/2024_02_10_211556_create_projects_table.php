@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             // title, description, link
             $table->string('title');
-            $table->text('description');
-            $table->string('link');
+            $table->text('description')->nullable();
+            $table->string('link')->nullable();
             $table->timestamps();
         });
     }

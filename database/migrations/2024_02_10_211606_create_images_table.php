@@ -18,7 +18,7 @@ return new class extends Migration
             // url column to store the url of the image (path).
             $table->string('url');
             // alt (caption) column to store the caption of the image.
-            $table->string('alt');
+            $table->string('alt')->nullable();
             $table->timestamps();
         });
     }
