@@ -12,7 +12,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 // Grouping routes with a prefix for versioning
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->middleware('throttle:60,1')->group(function () {
     // Get projects
     Route::get('/get-projects/{page}/{limit}', [ProjectApiController::class, 'getProjectsList']);
 
