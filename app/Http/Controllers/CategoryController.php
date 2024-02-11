@@ -20,28 +20,39 @@ class CategoryController extends Controller
     /**
      * Display a listing of the categories.
      *
-     * @return \Illuminate\Http\JSONResponse
+     * @return \Illuminate\contracts\View\View|\Illuminate\Contracts\View\Factory
      */
     public function index()
     {
         $categories = $this->categoryService->getAllCategories();
-        return APIHelper::makeAPIResponse($categories, 'Categories retrieved successfully.');
+        return view('categories.index', ['categories' => $categories]);
     }
+
+    /**
+     * Show the form for creating a new category.
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function create()
+    {
+        return view('categories.create');
+    }
+
 
     /**
      * Store a newly created category in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JSONResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         try {
             $category = $this->categoryService->createCategory($request->all());
-            return APIHelper::makeAPIResponse($category, 'Category created successfully.', 201);
+            return redirect()->route('categories.index')->with('success', 'Category created successfully.');
         } catch (\Exception $e) {
             APIHelper::writeLog('Failed to create category: ' . $e->getMessage());
-            return APIHelper::makeAPIResponse(null, 'Failed to create category.', 500, false);
+            return redirect()->route('categories.index')->with('error', 'Failed to create category.' . $e->getMessage());
         }
     }
 
@@ -63,20 +74,32 @@ class CategoryController extends Controller
     }
 
     /**
+     * Show the form for editing the specified category.
+     *
+     * @param  int  $id
+     * @return \Illuminate\contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function edit($id)
+    {
+        $category = $this->categoryService->getCategoryById($id);
+        return view('categories.edit', ['category' => $category]);
+    }
+
+    /**
      * Update the specified category in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\JSONResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
     {
         try {
             $category = $this->categoryService->updateCategory($id, $request->all());
-            return APIHelper::makeAPIResponse($category, 'Category updated successfully.');
+            return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
         } catch (\Exception $e) {
             APIHelper::writeLog('Failed to update category: ' . $e->getMessage());
-            return APIHelper::makeAPIResponse(null, 'Failed to update category.', 500, false);
+            return redirect()->route('categories.index')->with('error', 'Failed to update category.' . $e->getMessage());
         }
     }
 

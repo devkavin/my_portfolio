@@ -20,8 +20,11 @@ class CategoryService
     public function createCategory(array $data): Category
     {
         // Validate the incoming data
+        $data['slug'] = strtolower(str_replace(' ', '-', $data['name']));
+
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255|unique:categories,name',
+            'slug' => 'required|string|max:255|unique:categories,slug',
             'description' => 'nullable|string',
         ]);
 
@@ -46,7 +49,20 @@ class CategoryService
     {
         $category = Category::findOrFail($categoryId);
 
-        $category->update($data);
+        // validate
+        $data['slug'] = strtolower(str_replace(' ', '-', $data['name']));
+
+        $validator = Validator::make($data, [
+            'name' => 'required|string|max:255|unique:categories,name,' . $categoryId,
+            'slug' => 'required|string|max:255|unique:categories,slug,' . $categoryId,
+            'description' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+
+        $category->update($validator->validated());
 
         return $category;
     }

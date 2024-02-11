@@ -3,63 +3,66 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Tag;
+use App\Services\TagService;
 use App\Helpers\APIHelper;
 use Illuminate\Support\Facades\Validator;
 
 class TagController extends Controller
 {
+    protected $tagService;
+
+    public function __construct()
+    {
+        $this->tagService = new TagService();
+    }
     /**
      * Display a listing of tags.
      *
-     * @return \Illuminate\Http\JSONResponse
+     * @return \Illuminate\contracts\View\View|\Illuminate\Contracts\View\Factory
      */
     public function index()
     {
-        $tags = Tag::all();
-        return APIHelper::makeAPIResponse($tags, 'Tags retrieved successfully.');
+        $tags = $this->tagService->getAllTags();
+        return view('tags.index', ['tags' => $tags]);
+    }
+
+    /**
+     * Show the form for creating a new tag.
+     *
+     * @return \Illuminate\contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function create()
+    {
+        return view('tags.create');
     }
 
     /**
      * Store a newly created tag in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JSONResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|unique:tags|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return APIHelper::makeAPIResponse(null, $validator->errors()->first(), 400, false);
-        }
-
         try {
-            $tag = Tag::create($validator->validated());
-            return APIHelper::makeAPIResponse($tag, 'Tag created successfully.', 201);
+            $tag = $this->tagService->createTag($request->all());
+            return redirect()->route('tags.index')->with('success', 'Tag created successfully.');
         } catch (\Exception $e) {
             APIHelper::writeLog('Failed to create tag: ' . $e->getMessage());
-            return APIHelper::makeAPIResponse(null, 'Failed to create tag.', 500, false);
+            return redirect()->route('tags.index')->with('error', 'Failed to create tag.' . $e->getMessage());
         }
     }
 
     /**
-     * Display the specified tag.
+     * Show the form for editing the specified tag.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JSONResponse
+     * @return \Illuminate\contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function show($id)
+    public function edit($id)
     {
-        $tag = Tag::find($id);
-
-        if (!$tag) {
-            return APIHelper::makeAPIResponse(null, 'Tag not found.', 404, false);
-        }
-
-        return APIHelper::makeAPIResponse($tag, 'Tag retrieved successfully.');
+        $tag = $this->tagService->getTagById($id);
+        return view('tags.edit', ['tag' => $tag]);
     }
 
     /**
@@ -67,25 +70,16 @@ class TagController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\JSONResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|unique:tags,name,' . $id . '|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return APIHelper::makeAPIResponse(null, $validator->errors()->first(), 400, false);
-        }
-
         try {
-            $tag = Tag::findOrFail($id);
-            $tag->update($validator->validated());
-            return APIHelper::makeAPIResponse($tag, 'Tag updated successfully.');
+            $tag = $this->tagService->updateTag($id, $request->all());
+            return redirect()->route('tags.index')->with('success', 'Tag updated successfully.');
         } catch (\Exception $e) {
             APIHelper::writeLog('Failed to update tag: ' . $e->getMessage());
-            return APIHelper::makeAPIResponse(null, 'Failed to update tag.', 500, false);
+            return redirect()->route('tags.index')->with('error', 'Failed to update tag.' . $e->getMessage());
         }
     }
 
@@ -93,17 +87,16 @@ class TagController extends Controller
      * Remove the specified tag from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JSONResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
         try {
-            $tag = Tag::findOrFail($id);
-            $tag->delete();
-            return APIHelper::makeAPIResponse(null, 'Tag deleted successfully.');
+            $tag = $this->tagService->deleteTag($id);
+            return redirect()->route('tags.index')->with('success', 'Tag deleted successfully.');
         } catch (\Exception $e) {
             APIHelper::writeLog('Failed to delete tag: ' . $e->getMessage());
-            return APIHelper::makeAPIResponse(null, 'Failed to delete tag.', 500, false);
+            return redirect()->route('tags.index')->with('error', 'Failed to delete tag.' . $e->getMessage());
         }
     }
 }

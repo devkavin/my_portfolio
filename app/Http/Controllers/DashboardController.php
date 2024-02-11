@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Image;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -21,6 +22,7 @@ class DashboardController extends Controller
         $projectsCount = Project::count();
         $categoriesCount = Category::count();
         $tagsCount = Tag::count();
+        $imagesCount = Image::count();
 
         // Fetch recent projects, for example, projects created in the last 30 days
         $recentProjects = Project::where('created_at', '>', Carbon::now()->subDays(30))
@@ -34,6 +36,7 @@ class DashboardController extends Controller
             'projectsCount' => $projectsCount,
             'categoriesCount' => $categoriesCount,
             'tagsCount' => $tagsCount,
+            'imagesCount' => $imagesCount,
             'recentProjects' => $recentProjects,
             // Include additional data as needed for analytics
         ]);
