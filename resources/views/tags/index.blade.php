@@ -25,7 +25,6 @@
                         <tr>
                             <th scope="row">{{ $loop->iteration }}</th>
                             <td>{{ $tag->name }}</td>
-                            <td>{{ $tag->description }}</td>
                             <td>
                                 <a href="{{ route('tags.edit', $tag) }}" class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('tags.destroy', $tag) }}" method="POST" style="display:inline;">
@@ -38,7 +37,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4">No Tags found.</td>
+                            <td colspan="3">No Tags found.</td>
                         </tr>
                     @endforelse
                 </tbody>

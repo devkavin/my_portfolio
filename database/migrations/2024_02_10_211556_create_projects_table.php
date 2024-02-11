@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             // user_id column and set it as a foreign key referencing the id column of the users table.
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('user_id')->constrained()->onDelete('cascade');
             // category_id column and set it as a foreign key referencing the id column of the categories table.
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             // title, description, link

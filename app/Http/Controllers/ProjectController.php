@@ -65,7 +65,7 @@ class ProjectController extends Controller
             return redirect()->route('projects.index')->with('success', 'Project created successfully.');
         } catch (\Exception $e) {
             APIHelper::writeLog('Failed to create project: ' . $e->getMessage());
-            return redirect()->route('projects.index')->with('error', 'Failed to create project.' . $e->getMessage());
+            return redirect()->route('projects.create')->with('error', 'Failed to create project.' . $e->getMessage());
         }
     }
 
@@ -120,10 +120,11 @@ class ProjectController extends Controller
     {
         try {
             $project = $this->projectService->updateProject($id, $request->all());
+            $project->tags()->sync($request->tags);
             return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
         } catch (\Exception $e) {
             APIHelper::writeLog('Failed to update project: ' . $e->getMessage());
-            return redirect()->route('projects.index')->with('error', 'Failed to update project.' . $e->getMessage());
+            return redirect()->route('projects.edit')->with('error', 'Failed to update project.' . $e->getMessage());
         }
     }
 

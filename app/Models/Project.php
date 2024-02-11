@@ -7,12 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    protected $fillable = ['user_id', 'category_id', 'title', 'description', 'link'];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = ['category_id', 'title', 'description', 'link'];
 
     public function category()
     {
@@ -40,10 +35,9 @@ class Project extends Model
     }
 
     protected static function booted()
-{
-    static::created(function ($project) {
-        // Logic after a project is created, like clearing cache, logging, etc.
-    });
-}
-
+    {
+        static::created(function ($project) {
+            // Logic after a project is created, like clearing cache, logging, etc.
+        });
+    }
 }

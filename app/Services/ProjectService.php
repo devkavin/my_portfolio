@@ -24,7 +24,6 @@ class ProjectService
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'user_id' => 'required|exists:users,id',
             // Add any other fields as necessary
         ]);
 
@@ -52,7 +51,19 @@ class ProjectService
     {
         $project = Project::findOrFail($projectId);
 
-        $project->update($data);
+        // Validate the incoming data
+        $validator = Validator::make($data, [
+            'title' => 'string|max:255',
+            'description' => 'string',
+            'category_id' => 'exists:categories,id',
+            // Add any other fields as necessary
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+
+        $project->update($validator->validated());
 
         return $project;
     }

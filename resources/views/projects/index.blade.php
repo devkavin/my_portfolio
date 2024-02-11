@@ -28,7 +28,6 @@
                             <td>{{ $project->title }}</td>
                             <td>{{ $project->category->name ?? 'N/A' }}</td>
                             <td>
-                                <a href="{{ route('projects.show', $project) }}" class="btn btn-info btn-sm">View</a>
                                 <a href="{{ route('projects.edit', $project) }}" class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('projects.destroy', $project) }}" method="POST"
                                     style="display:inline;">
