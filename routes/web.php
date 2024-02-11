@@ -9,22 +9,25 @@ use App\Http\Controllers\{
     ImageController
 };
 
-// redirect / to dashboard
+// redirect / and /home to /dashboard
 Route::redirect('/', '/dashboard');
+Route::redirect('/home', '/dashboard');
 
-// Dashboard
-Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    // Dashboard
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Project Management
-Route::resource('projects', ProjectController::class);
+    // Project Management
+    Route::resource('projects', ProjectController::class);
 
-// Category Management
-Route::resource('categories', CategoryController::class);
+    // Category Management
+    Route::resource('categories', CategoryController::class);
 
-// Tag Management
-Route::resource('tags', TagController::class);
+    // Tag Management
+    Route::resource('tags', TagController::class);
 
-// Image Management
-Route::post('images/upload', [ImageController::class, 'upload'])->name('images.upload');
-Route::delete('images/{id}', [ImageController::class, 'destroy'])->name('images.destroy');
-// require __DIR__ . '/auth.php'; // Laravel Breeze, Fortify, or Jetstream routes for authentication
+    // Image Management
+    Route::post('images/upload', [ImageController::class, 'upload'])->name('images.upload');
+    Route::delete('images/{id}', [ImageController::class, 'destroy'])->name('images.destroy');
+    // require __DIR__ . '/auth.php'; // Laravel Breeze, Fortify, or Jetstream routes for authentication
+});
