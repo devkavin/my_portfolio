@@ -1,18 +1,30 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{
+    DashboardController,
+    ProjectController,
+    CategoryController,
+    TagController,
+    ImageController
+};
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// redirect / to dashboard
+Route::redirect('/', '/dashboard');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Dashboard
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+// Project Management
+Route::resource('projects', ProjectController::class);
+
+// Category Management
+Route::resource('categories', CategoryController::class);
+
+// Tag Management
+Route::resource('tags', TagController::class);
+
+// Image Management
+Route::post('images/upload', [ImageController::class, 'upload'])->name('images.upload');
+Route::delete('images/{id}', [ImageController::class, 'destroy'])->name('images.destroy');
+// require __DIR__ . '/auth.php'; // Laravel Breeze, Fortify, or Jetstream routes for authentication
