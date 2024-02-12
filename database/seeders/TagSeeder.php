@@ -62,6 +62,26 @@ class TagSeeder extends Seeder
                 'name' => 'Fullstack',
                 'slug' => 'fullstack',
             ],
+            [
+                'name' => 'Ui/UX Design',
+                'slug' => 'ui-ux-design',
+            ],
+            [
+                'name' => 'HTML5',
+                'slug' => 'html5',
+            ],
+            [
+                'name' => 'MySQL',
+                'slug' => 'mysql',
+            ],
+            [
+                'name' => 'MongoDB',
+                'slug' => 'mongodb',
+            ],
+            [
+                'name' => 'NodeJS',
+                'slug' => 'nodejs',
+            ],
         ];
 
         foreach ($tags as $tag) {

@@ -63,4 +63,17 @@ Route::middleware(['auth'])->group(function () {
         }
         return 'Seeding complete';
     });
+
+    // fresh migration and seed
+    Route::get('/run-fresh-migration', function () {
+        try {
+            Artisan::call('optimize:clear');
+            Artisan::call('migrate:fresh --seed');
+            // print db seed message
+            echo Artisan::output();
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to migrate and seed: ' . $e->getMessage()], 500);
+        }
+        return 'Migration and seeding complete';
+    });
 });

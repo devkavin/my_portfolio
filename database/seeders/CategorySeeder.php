@@ -30,19 +30,14 @@ class CategorySeeder extends Seeder
                 'description' => 'Projects related to desktop development',
             ],
             [
-                'name' => 'Machine Learning',
-                'slug' => 'machine-learning',
-                'description' => 'Projects related to machine learning',
+                'name' => 'API Development',
+                'slug' => 'api-development',
+                'description' => 'Projects related to API development',
             ],
             [
-                'name' => 'DevOps',
-                'slug' => 'devops',
-                'description' => 'Projects related to DevOps',
-            ],
-            [
-                'name' => 'Testing',
-                'slug' => 'testing',
-                'description' => 'Projects related to testing',
+                'name' => 'Game Development',
+                'slug' => 'game-development',
+                'description' => 'Projects related to game development',
             ],
             [
                 'name' => 'Other',
