@@ -46,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
 
         try {
             Artisan::call('migrate');
+            // print db migration message
+            echo Artisan::output();
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to migrate and seed: ' . $e->getMessage()], 500);
         }
@@ -68,11 +70,26 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/run-fresh-migration', function () {
         try {
             Artisan::call('optimize:clear');
-            Artisan::call('migrate:fresh --seed');
+            // print cache cleared message
+            echo Artisan::output();
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to clear cache: ' . $e->getMessage()], 500);
+        }
+
+        try {
+            Artisan::call('migrate:fresh');
+            // print db migration message
+            echo Artisan::output();
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to migrate: ' . $e->getMessage()], 500);
+        }
+
+        try {
+            Artisan::call('db:seed');
             // print db seed message
             echo Artisan::output();
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to migrate and seed: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Failed to seed: ' . $e->getMessage()], 500);
         }
         return 'Migration and seeding complete';
     });
